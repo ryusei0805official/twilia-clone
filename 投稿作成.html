@@ -24,17 +24,19 @@
         return;
       }
 
-      // 🔁 ここに自分のGAS URLを貼ってください
+      // 👇 ここにあなたの最新の GAS の /exec URL を貼ってください
 const GAS_URL = "https://script.google.com/macros/s/AKfycbzLnqUH8uNTvZCtc_FK4ICn8q_K2rBTJZYyIlo7_evjpymnn3ZmJHJo9axh-VDxQ/exec";
 
       fetch(GAS_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        mode: "no-cors", // ✅ CORS回避
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({ text: tweetText })
       })
-      .then(res => res.text())
-      .then(result => {
-        alert("投稿完了！\n" + result);
+      .then(() => {
+        alert("投稿完了！（no-corsのためレスポンスなし）");
       })
       .catch(err => {
         alert("投稿エラー:\n" + err);

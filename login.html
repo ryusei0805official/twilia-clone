@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ログイン | Twiliaクローン</title>
+  <style>
+    body { font-family: sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .box { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input, button { font-size: 18px; margin-top: 10px; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>ログイン</h2>
+    <input type="password" id="password" placeholder="パスワードを入力" />
+    <button onclick="checkLogin()">ログイン</button>
+    <p id="message" style="color: red;"></p>
+  </div>
+
+  <script>
+    const correctPassword = "1234"; // ← 任意のパスワードに変更OK
+    const redirectURL = "投稿作成.html"; // ログイン成功時に開くページ
+
+    function checkLogin() {
+      const input = document.getElementById('password').value;
+      if (input === correctPassword) {
+        window.location.href = redirectURL;
+      } else {
+        document.getElementById('message').innerText = "パスワードが違います";
+      }
+    }
+  </script>
+</body>
+</html>

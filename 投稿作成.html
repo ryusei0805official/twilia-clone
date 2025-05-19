@@ -1,61 +1,44 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>ツイート作成 | Twiliaクローン</title>
-  <link rel="stylesheet" href="style.css">
-<style>
-    body { font-family: sans-serif; padding: 20px; background: #f8f8f8; }
-    textarea { width: 100%; height: 200px; font-size: 16px; }
-    select, input[type="text"], button { font-size: 16px; margin-top: 10px; }
-  </style>
+  <meta charset="UTF-8" />
+  <title>投稿作成 | Twiliaクローン</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>ツイート作成画面</h1>
+  <div class="container">
+    <h1>投稿作成画面</h1>
 
-  <label>テンプレートを選択:</label>
-  <select id="templateSelect" onchange="loadTemplate()">
-    <option value="">-- テンプレを選んでください --</option>
-    <option value="おはよう🌞 今日も一緒にがんばろう！">おはよう</option>
-    <option value="今夜はちょっと大胆に… #夜のツイート">夜の誘惑</option>
-  </select>
+    <label>投稿内容:</label><br>
+    <textarea id="tweetText" rows="6" placeholder="ここに投稿内容を入力してください"></textarea><br>
 
-  <br><br>
-  <label>追加ハッシュタグ:</label>
-  <input type="text" id="hashtagInput" placeholder="#例 #セクシー #グラビア" />
-
-  <br><br>
-  <label>ツイート本文:</label><br>
-  <textarea id="tweetText"></textarea>
-
-  <br>
-  <button onclick="addHashtags()">ハッシュタグを追加</button>
-  <button onclick="copyTweet()">コピーする</button>
-  <button onclick="clearText()">リセット</button>
+    <button onclick="sendToTwitter()">Twitterに投稿</button>
+  </div>
 
   <script>
-    function loadTemplate() {
-      const template = document.getElementById('templateSelect').value;
-      document.getElementById('tweetText').value = template;
-    }
+    function sendToTwitter() {
+      const tweetText = document.getElementById('tweetText').value.trim();
 
-    function addHashtags() {
-      const tag = document.getElementById('hashtagInput').value.trim();
-      const area = document.getElementById('tweetText');
-      if (tag) area.value += ' ' + tag;
-    }
+      if (!tweetText) {
+        alert("投稿内容が空です");
+        return;
+      }
 
-    function copyTweet() {
-      const area = document.getElementById('tweetText');
-      area.select();
-      document.execCommand('copy');
-      alert('コピーしました！Twitterに貼り付けてね！');
-    }
+      // 🔁 ここに自分のGAS URLを貼ってください
+      const GAS_URL = "https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbyZLtJalMS5f4GEd8FVeNcmdpYif5lna4cFCkTyEwL8V6W6BvGIY33Vkzg0cZMScF5glQ/exec/exec";
 
-    function clearText() {
-      document.getElementById('tweetText').value = '';
-      document.getElementById('hashtagInput').value = '';
-      document.getElementById('templateSelect').selectedIndex = 0;
+      fetch(GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: tweetText })
+      })
+      .then(res => res.text())
+      .then(result => {
+        alert("投稿完了！\n" + result);
+      })
+      .catch(err => {
+        alert("投稿エラー:\n" + err);
+      });
     }
   </script>
 </body>

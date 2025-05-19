@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>投稿ログ一覧 | Twiliaクローン</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 6px; box-shadow: 0 0 3px rgba(0,0,0,0.1); }
+    button { margin-left: 10px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>投稿ログ一覧</h1>
+
+  <ul id="logList"></ul>
+
+  <script>
+    function loadLogs() {
+      const posts = JSON.parse(localStorage.getItem('scheduledPosts') || '[]');
+      const list = document.getElementById('logList');
+      list.innerHTML = '';
+
+      if (posts.length === 0) {
+        list.innerHTML = '<li>まだ予約投稿はありません。</li>';
+        return;
+      }
+
+      posts.forEach((post, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <strong>${post.time}</strong><br>${post.text}
+          <button onclick="deleteLog(${index})">削除</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    function deleteLog(index) {
+      const posts = JSON.parse(localStorage.getItem('scheduledPosts') || '[]');
+      posts.splice(index, 1);
+      localStorage.setItem('scheduledPosts', JSON.stringify(posts));
+      loadLogs();
+    }
+
+    window.onload = loadLogs;
+  </script>
+</body>
+</html>

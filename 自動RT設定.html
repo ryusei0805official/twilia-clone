@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>自動RT設定 | Twiliaクローン</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    input, button { font-size: 16px; margin-top: 10px; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 10px; background: #fff; padding: 10px; border-radius: 6px; box-shadow: 0 0 3px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>自動RT条件設定</h1>
+
+  <label>キーワード or ハッシュタグ:</label><br>
+  <input type="text" id="rtKeyword" placeholder="#おはようAV など" />
+  <button onclick="saveRTCondition()">追加する</button>
+
+  <h2>保存済みのRT条件</h2>
+  <ul id="rtList"></ul>
+
+  <script>
+    function getRTList() {
+      return JSON.parse(localStorage.getItem('rtConditions') || '[]');
+    }
+
+    function saveRTList(list) {
+      localStorage.setItem('rtConditions', JSON.stringify(list));
+    }
+
+    function saveRTCondition() {
+      const value = document.getElementById('rtKeyword').value.trim();
+      if (!value) return alert("キーワードを入力してください");
+
+      const list = getRTList();
+      list.push(value);
+      saveRTList(list);
+      document.getElementById('rtKeyword').value = '';
+      renderList();
+    }
+
+    function deleteRT(index) {
+      const list = getRTList();
+      list.splice(index, 1);
+      saveRTList(list);
+      renderList();
+    }
+
+    function renderList() {
+      const list = getRTList();
+      const ul = document.getElementById('rtList');
+      ul.innerHTML = '';
+      if (list.length === 0) {
+        ul.innerHTML = '<li>まだ条件がありません</li>';
+        return;
+      }
+      list.forEach((keyword, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${keyword}
+          <button onclick="deleteRT(${i})">削除</button>
+        `;
+        ul.appendChild(li);
+      });
+    }
+
+    window.onload = renderList;
+  </script>
+</body>
+</html>
